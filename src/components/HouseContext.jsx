@@ -26,9 +26,58 @@ const HouseContextProvider = ({ children }) => {
     const uniqueProperties = ['Location (any)', ...new Set(allProperties)]
     setProperties(uniqueProperties)
   }, [])
-const handleClick = () => {
-  console.log('clicked')
-}
+  const handleClick = () => {
+    setLoading(true)
+    const isDefault = (str) => {
+      return str.split(' ').includes('(any)')
+    }
+    const minPrice = parseInt(price.split(' - ')[0])
+    const maxPrice = parseInt(price.split(' - ')[1])
+    const newHouses = housesData.filter((house) => {
+      const housePrice = parseInt(house.price)
+      if (house.country === country && house.type === property
+        && housePrice >= minPrice && housePrice <= maxPrice) {
+        return house
+      }
+      if (isDefault(country) && isDefault(property) && isDefault(price)) {
+        return house
+      }
+      if (!isDefault(country) && isDefault(property) && isDefault(price)) {
+        return house.country === country
+      }
+      if (isDefault(country) && !isDefault(property) && isDefault(price)) {
+        return house.type === property
+      }
+      if (isDefault(property) && isDefault(country) && !isDefault(price)) {
+        if (housePrice >= minPrice && housePrice <= maxPrice) {
+          return house
+        }
+      }
+      if (!isDefault(country) && !isDefault(property) && isDefault(price)) {
+        return house.type === property && house.country === country
+      }
+      if (!isDefault(country) && !isDefault(property) && isDefault(price)) {
+        return house.type === property && house.country === country
+      }
+      if (!isDefault(country) && isDefault(property) && !isDefault(price)) {
+        if (housePrice >= minPrice && housePrice <= maxPrice) {
+          return house.country === country
+        }
+      }
+      if (isDefault(country) && !isDefault(property) && !isDefault(price)) {
+        if (housePrice >= minPrice && housePrice <= maxPrice) {
+          return house.type === property
+        }
+      }
+
+    })
+    setTimeout(() => {
+      return newHouses.lenght === 0 ? setHouses([])
+        : setHouses(newHouses),
+        setLoading(false),
+        console.log(newHouses)
+    }, 1000)
+  }
   return <HouseContext.Provider value={
     {
       country,
