@@ -69,7 +69,6 @@ const HouseContextProvider = ({ children }) => {
           return house.type === property
         }
       }
-
     })
     setTimeout(() => {
       return newHouses.lenght === 0 ? setHouses([])
